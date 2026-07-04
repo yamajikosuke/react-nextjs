@@ -1,21 +1,41 @@
-import type { Metadata } from "next";
-import { AppProviders } from "@/providers";
-import "./globals.css";
+"use client";
 
-export const metadata: Metadata = {
-  title: "react-nextjs starter",
-  description: "Next.js 15 + React 19 + TypeScript starter",
-};
+import { AppBar, Toolbar, Typography, Button } from "@mui/material";
+import Link from "next/link";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#1976d2",
+    },
+  },
+});
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="ja">
       <body>
-        <AppProviders>{children}</AppProviders>
+        <ThemeProvider theme={theme}>
+          <AppBar position="static">
+            <Toolbar>
+              <Typography variant="h6" sx={{ flexGrow: 1 }}>
+                My Next.js App
+              </Typography>
+              <Button color="inherit" component={Link} href="/">
+                Home
+              </Button>
+              <Button color="inherit" component={Link} href="/about">
+                About
+              </Button>
+              <Button color="inherit" component={Link} href="/contact">
+                Contact
+              </Button>
+            </Toolbar>
+          </AppBar>
+
+          <main style={{ padding: "24px" }}>{children}</main>
+        </ThemeProvider>
       </body>
     </html>
   );
