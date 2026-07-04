@@ -4,10 +4,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import { Alert, Box, Button, Container, Stack, TextField, Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { apiClient } from "@/lib/api/client";
-import { contactSchema, ContactSchema } from "@/lib/validation/contact";
 import { useCounterStore } from "@/lib/store/counter";
+import { contactSchema, ContactSchema } from "@/lib/validation/contact";
 
 const columns: GridColDef[] = [
   { field: "name", headerName: "ライブラリ", flex: 1 },
@@ -21,6 +22,7 @@ const rows = [
 ];
 
 export function HomeClient() {
+  const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
   const count = useCounterStore((state) => state.count);
   const increment = useCounterStore((state) => state.increment);
 
@@ -39,6 +41,10 @@ export function HomeClient() {
     },
   });
 
+  const onSubmit = (values: ContactSchema) => {
+    setSubmittedEmail(values.email);
+  };
+
   return (
     <Container sx={{ py: 4 }}>
       <Stack spacing={3}>
@@ -49,7 +55,7 @@ export function HomeClient() {
           Zustand Counter: {count}
         </Button>
 
-        <Box component="form" onSubmit={handleSubmit(() => undefined)} sx={{ maxWidth: 420 }}>
+        <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ maxWidth: 420 }}>
           <Stack spacing={2}>
             <TextField
               label="Email"
@@ -61,6 +67,7 @@ export function HomeClient() {
             <Button type="submit" variant="outlined">
               React Hook Form + Zod
             </Button>
+            {submittedEmail && <Alert severity="success">Submitted: {submittedEmail}</Alert>}
           </Stack>
         </Box>
 
