@@ -2,7 +2,7 @@ import { timingSafeEqual } from "node:crypto";
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-function isValidPassword(input: string, expected: string) {
+function isValidCredential(input: string, expected: string) {
   const inputBuffer = Buffer.from(input);
   const expectedBuffer = Buffer.from(expected);
 
@@ -33,8 +33,8 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        const isValidUser = credentials.username === expectedUsername;
-        const isValidPass = isValidPassword(credentials.password, expectedPassword);
+        const isValidUser = isValidCredential(credentials.username, expectedUsername);
+        const isValidPass = isValidCredential(credentials.password, expectedPassword);
 
         if (!isValidUser || !isValidPass) {
           return null;
