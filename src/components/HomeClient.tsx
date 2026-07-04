@@ -11,8 +11,8 @@ import { useCounterStore } from "@/lib/store/counter";
 import { contactSchema, ContactSchema } from "@/lib/validation/contact";
 
 const columns: GridColDef[] = [
-  { field: "name", headerName: "ライブラリ", flex: 1 },
-  { field: "purpose", headerName: "用途", flex: 1 },
+  { field: "name", headerName: "Library", flex: 1 },
+  { field: "purpose", headerName: "Purpose", flex: 1 },
 ];
 
 const rows = [
@@ -75,7 +75,9 @@ export function HomeClient() {
           <DataGrid columns={columns} rows={rows} hideFooter />
         </Box>
 
-        <Alert severity="info">OpenAPI Generator / Swagger は openapi ディレクトリを参照してください。</Alert>
+        <Alert severity="info">
+          For OpenAPI Generator / Swagger, please refer to the openapi directory.
+        </Alert>
       </Stack>
     </Container>
   );

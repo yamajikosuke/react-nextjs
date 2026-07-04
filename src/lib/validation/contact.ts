@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const contactSchema = z.object({
-  email: z.string().email("有効なメールアドレスを入力してください"),
+  email: z.string().email("Please enter a valid email address"),
 });
 
 export type ContactSchema = z.infer<typeof contactSchema>;
