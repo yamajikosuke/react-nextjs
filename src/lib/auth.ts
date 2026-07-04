@@ -1,5 +1,17 @@
-import { NextAuthOptions } from "next-auth";
+import { timingSafeEqual } from "node:crypto";
+import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+
+function isValidCredential(input: string, expected: string) {
+  const inputBuffer = Buffer.from(input);
+  const expectedBuffer = Buffer.from(expected);
+
+  if (inputBuffer.length !== expectedBuffer.length) {
+    return false;
+  }
+
+  return timingSafeEqual(inputBuffer, expectedBuffer);
+}
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -10,14 +22,28 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (credentials?.username && credentials.password) {
-          return {
-            id: credentials.username,
-            name: credentials.username,
-          };
+        const expectedUsername = process.env.AUTH_DEMO_USERNAME;
+        const expectedPassword = process.env.AUTH_DEMO_PASSWORD;
+
+        if (!credentials?.username || !credentials.password) {
+          return null;
         }
 
-        return null;
+        if (!expectedUsername || !expectedPassword) {
+          return null;
+        }
+
+        const isValidUser = isValidCredential(credentials.username, expectedUsername);
+        const isValidPass = isValidCredential(credentials.password, expectedPassword);
+
+        if (!isValidUser || !isValidPass) {
+          return null;
+        }
+
+        return {
+          id: credentials.username,
+          name: credentials.username,
+        };
       },
     }),
   ],
